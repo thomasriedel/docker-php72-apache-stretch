@@ -46,7 +46,7 @@ RUN /usr/sbin/a2enmod rewrite && /usr/sbin/a2enmod headers && /usr/sbin/a2enmod 
 COPY ./files/000-default.conf /etc/apache2/sites-available/000-default.conf
 
 # xdebug stuff
-RUN pecl install xdebug-2.5.5 && docker-php-ext-enable xdebug
+RUN pecl install xdebug-2.7.2 && docker-php-ext-enable xdebug
 RUN echo 'zend_extension="/usr/local/lib/php/extensions/no-debug-non-zts-20151012/xdebug.so"' >> /usr/local/etc/php/php.ini
 RUN echo 'xdebug.remote_port=9000' >> /usr/local/etc/php/php.ini
 RUN echo 'xdebug.remote_enable=1' >> /usr/local/etc/php/php.ini
