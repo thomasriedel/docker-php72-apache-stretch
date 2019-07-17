@@ -10,6 +10,7 @@ RUN echo "Europe/Berlin" > /etc/timezone && dpkg-reconfigure -f noninteractive t
 
 # install packages
 RUN apt-get update -y && \
+  apt-get install --no-install-recommends --assume-yes --quiet ca-certificates curl git &&\
   apt-get install -y --no-install-recommends \
   less vim wget unzip rsync git mysql-client postfix autossh \
   libcurl4-openssl-dev libfreetype6 libjpeg62-turbo libpng-dev libjpeg-dev libxml2-dev libwebp6 libxpm4 libc-client-dev libkrb5-dev && \
@@ -43,6 +44,13 @@ RUN sed -i -e 's/ModPagespeed on/ModPagespeed off/g' /etc/apache2/mods-available
 # apache stuff
 RUN /usr/sbin/a2enmod rewrite && /usr/sbin/a2enmod headers && /usr/sbin/a2enmod expires && /usr/sbin/a2enmod pagespeed
 COPY ./files/000-default.conf /etc/apache2/sites-available/000-default.conf
+
+# xdebug stuff
+RUN pecl install xdebug-2.5.5 && docker-php-ext-enable xdebug
+RUN echo 'zend_extension="/usr/local/lib/php/extensions/no-debug-non-zts-20151012/xdebug.so"' >> /usr/local/etc/php/php.ini
+RUN echo 'xdebug.remote_port=9000' >> /usr/local/etc/php/php.ini
+RUN echo 'xdebug.remote_enable=1' >> /usr/local/etc/php/php.ini
+RUN echo 'xdebug.remote_connect_back=1' >> /usr/local/etc/php/php.ini
 
 WORKDIR /var/www/html
 
