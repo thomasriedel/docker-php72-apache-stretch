@@ -47,10 +47,15 @@ COPY ./files/000-default.conf /etc/apache2/sites-available/000-default.conf
 
 # xdebug stuff
 RUN pecl install xdebug-2.7.2 && docker-php-ext-enable xdebug
-RUN echo 'zend_extension="/usr/local/lib/php/extensions/no-debug-non-zts-20151012/xdebug.so"' >> /usr/local/etc/php/php.ini
-RUN echo 'xdebug.remote_port=9000' >> /usr/local/etc/php/php.ini
-RUN echo 'xdebug.remote_enable=1' >> /usr/local/etc/php/php.ini
-RUN echo 'xdebug.remote_connect_back=1' >> /usr/local/etc/php/php.ini
+
+ARG XDEBUG_INI=/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+
+RUN echo "xdebug.default_enable = off" >> ${XDEBUG_INI} \
+    && echo "xdebug.remote_enable = on" >> ${XDEBUG_INI} \
+    && echo "xdebug.remote_autostart = off" >> ${XDEBUG_INI} \
+    && echo "xdebug.remote_connect_back = off" >> ${XDEBUG_INI} \
+    && echo "xdebug.remote_port = 9000" >> ${XDEBUG_INI} \
+    && echo "xdebug.remote_host = localhost" >> ${XDEBUG_INI}
 
 WORKDIR /var/www/html
 
