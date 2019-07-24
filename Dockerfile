@@ -19,8 +19,14 @@ RUN apt-get update -y && \
   rm -rf /var/lib/apt/lists/* && \
   echo "export TERM=xterm" >> /root/.bashrc
 
+ADD https://git.archlinux.org/svntogit/packages.git/plain/trunk/freetype.patch?h=packages/php /tmp/freetype.patch
+RUN docker-php-source extract && \
+  cd /usr/src/php && \
+  patch -p1 -i /tmp/freetype.patch && \
+  rm /tmp/freetype.patch 
+
 # install php extensions
-RUN docker-php-ext-configure gd --with-jpeg-dir=/usr/local/ --with-freetype-dir=/usr/local/ && \
+RUN docker-php-ext-configure gd --with-jpeg-dir=/usr/local/ --with-gd --with-freetype-dir && \
   docker-php-ext-configure imap --with-kerberos --with-imap-ssl && \
   docker-php-ext-install -j$(nproc) curl json xml mbstring zip bcmath soap pdo_mysql mysqli gd gettext imap
 
