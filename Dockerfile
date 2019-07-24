@@ -20,7 +20,7 @@ RUN apt-get update -y && \
   echo "export TERM=xterm" >> /root/.bashrc
 
 # install php extensions
-RUN docker-php-ext-configure gd --with-jpeg-dir=/usr/local/ && \
+RUN docker-php-ext-configure gd --with-jpeg-dir=/usr/local/ --with-freetype-dir=/usr/local/freetype2 && \
   docker-php-ext-configure imap --with-kerberos --with-imap-ssl && \
   docker-php-ext-install -j$(nproc) curl json xml mbstring zip bcmath soap pdo_mysql mysqli gd gettext imap
 
@@ -56,6 +56,23 @@ RUN echo "xdebug.default_enable = off" >> ${XDEBUG_INI} \
     && echo "xdebug.remote_connect_back = off" >> ${XDEBUG_INI} \
     && echo "xdebug.remote_port = 9000" >> ${XDEBUG_INI} \
     && echo "xdebug.remote_host = 10.254.254.254" >> ${XDEBUG_INI}
+    
+FROM php:fpm 
+RUN apt-get update && apt-get install -y \
+    libfreetype6-dev \
+        libmcrypt-dev \
+        libpng12-dev \
+        libjpeg-dev \
+        libpng-dev
+    && docker-php-ext-install iconv mcrypt \
+    && docker-php-ext-configure gd \
+        --enable-gd-native-ttf \
+        --with-freetype-dir=/usr/include/freetype2 \
+        --with-png-dir=/usr/include \
+        --with-jpeg-dir=/usr/include \
+    && docker-php-ext-install gd \
+    && docker-php-ext-install mbstring \
+    && docker-php-ext-enable gd
 
 WORKDIR /var/www/html
 
