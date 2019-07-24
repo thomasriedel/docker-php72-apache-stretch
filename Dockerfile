@@ -13,14 +13,14 @@ RUN apt-get update -y && \
   apt-get install --no-install-recommends --assume-yes --quiet ca-certificates curl git &&\
   apt-get install -y --no-install-recommends \
   less vim wget unzip rsync git mysql-client postfix autossh \
-  libcurl4-openssl-dev libfreetype6 libjpeg62-turbo libpng-dev libjpeg-dev libxml2-dev libwebp6 libxpm4 libc-client-dev libkrb5-dev && \
+  libcurl4-openssl-dev libfreetype6-dev libjpeg62-turbo libpng-dev libjpeg-dev libxml2-dev libwebp6 libxpm4 libc-client-dev libkrb5-dev && \
   apt-get clean && \
   apt-get autoremove -y && \
   rm -rf /var/lib/apt/lists/* && \
   echo "export TERM=xterm" >> /root/.bashrc
 
 # install php extensions
-RUN docker-php-ext-configure gd --with-jpeg-dir=/usr/local/ && \
+RUN docker-php-ext-configure gd --with-jpeg-dir=/usr/local/ --enable-gd-native-ttf --with-ttf --with-freetype-dir=/usr && \
   docker-php-ext-configure imap --with-kerberos --with-imap-ssl && \
   docker-php-ext-install -j$(nproc) curl json xml mbstring zip bcmath soap pdo_mysql mysqli gd gettext imap
 
