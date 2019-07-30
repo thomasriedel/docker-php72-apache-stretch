@@ -25,7 +25,7 @@ RUN docker-php-ext-configure gd --with-jpeg-dir=/usr/local/ --enable-gd-native-t
   docker-php-ext-install -j$(nproc) curl json xml mbstring zip bcmath soap pdo_mysql mysqli gd gettext imap opcache
 
 # install APCu
-RUN peel install apcu && \
+RUN pecl install apcu && \
     docker-php-ext-enable apcu
 
 # install ioncube    
