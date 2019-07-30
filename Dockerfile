@@ -22,7 +22,11 @@ RUN apt-get update -y && \
 # install php extensions
 RUN docker-php-ext-configure gd --with-jpeg-dir=/usr/local/ --enable-gd-native-ttf --with-ttf --with-freetype-dir=/usr && \
   docker-php-ext-configure imap --with-kerberos --with-imap-ssl && \
-  docker-php-ext-install -j$(nproc) curl json xml mbstring zip bcmath soap pdo_mysql mysqli gd gettext imap
+  docker-php-ext-install -j$(nproc) curl json xml mbstring zip bcmath soap pdo_mysql mysqli gd gettext imap opcache
+
+# install APCu
+RUN peel install apcu && \
+    docker-php-ext-enable apcu
 
 # install ioncube    
 RUN curl -o ioncube.tar.gz http://downloads3.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz \
