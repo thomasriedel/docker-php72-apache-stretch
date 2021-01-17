@@ -10,7 +10,6 @@ RUN echo "Europe/Berlin" > /etc/timezone && dpkg-reconfigure -f noninteractive t
 
 # install packages
 RUN apt-get update -y && \
-  apt-get install --no-install-recommends --assume-yes --quiet ca-certificates curl git &&\
   apt-get install -y --no-install-recommends \
   less vim wget unzip rsync git mysql-client postfix autossh \
   libcurl4-openssl-dev libfreetype6-dev libjpeg62-turbo libpng-dev libjpeg-dev libxml2-dev libwebp6 libxpm4 libc-client-dev libkrb5-dev && \
